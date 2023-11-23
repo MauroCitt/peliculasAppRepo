@@ -1,15 +1,15 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 const movieSchema = new Schema
     ({
         id: {type: Number, required: true, unique: true},
-        titulo: {type: String, required: true},
-        genero: [{type: String, required: true}],
-        director: [{type: Number, ref: 'director', required: true}],
-        crew: [{type: String, required: true}],
-        popularity: {type: Number, required: true},
-        vote_count: {type: Number, required: true},
-        vote_average: {type: Number, required: true}
+        titulo: {type: String},
+        genero: [{type: Number, ref:'genre'}],
+        director: {type: Number, ref: 'director'},
+        crew: [{type: String}],
+        popularity: {type: Number},
+        vote_count: {type: Number},
+        vote_average: {type: Number}
     });
 
-    export default mongoose.model('movie', movieSchema);
+    module.exports = model('movie', movieSchema);

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const Movie = require('../models/movie'); 
 
 let fetch;
 
@@ -25,22 +26,45 @@ apiConnectionController.getJsonFile = async (req, res, next) => {
     };
 
     try {
-        let response = await fetch(urlApi, options);
-        let data = await response.json();
-        fs.writeFileSync("peliculasOrdenadas1.json", JSON.stringify(data, null, 2));
-        res.json(data);
-
-        for (let index = 2; index < 7; index++) {
+        let allData = [];
+        for (let index = 1; index < 7; index++) {
             let currentUrlApi = urlApi.replace(/page=\d+/, `page=${index}`);
+            let response = await fetch(currentUrlApi, options);
+            let data = await response.json();
+            const movies = data.results;
+            await guardarDatosEnMongoDB(movies);
+            fs.writeFileSync("peliculasOrdenadas" + index + ".json", JSON.stringify(data, null, 2));
 
-
-            response = await fetch(currentUrlApi, options);
-            let newData = await response.json();
-            fs.writeFileSync("peliculasOrdenadas" + index + ".json", JSON.stringify(newData, null, 2));
+            allData.push(data);
         }
+
+        res.json(allData);
+
     } catch (error) {
         console.error(error);
     }
 };
+
+const guardarDatosEnMongoDB = async (movies) => {
+    try {
+        for (const movieData of movies) {
+            const movie = new Movie({
+                id: movieData.id,
+                titulo: movieData.title,
+                genero: movieData.genre_ids,
+                director: movieData.director,
+                crew: movieData.crew,
+                popularity: movieData.popularity,
+                vote_count: movieData.vote_count,
+                vote_average: movieData.vote_average
+            });
+            await movie.save();
+        }
+        console.log('Películas guardadas en MongoDB');
+    } catch (error) {
+        console.error("Error al guardar las películas en MongoDB", error);
+        throw error;
+    }
+}
 
 module.exports = apiConnectionController;
