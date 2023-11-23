@@ -1,7 +1,15 @@
 const fs = require('fs');
-const Movie = require('../models/movie'); 
+const Movie = require('../models/movie'); // Adjust the path based on your project structure
 
 let fetch;
+let ids = [];
+
+for(id of ids){ 
+    console.log("id:" + id);
+}
+
+console.log(ids.length);
+
 
 const init = async () => {
     fetch = (await import('node-fetch')).default;
@@ -32,6 +40,7 @@ apiConnectionController.getJsonFile = async (req, res, next) => {
             let response = await fetch(currentUrlApi, options);
             let data = await response.json();
             const movies = data.results;
+            ids.push(movies.map((movie) => movie.id));
             await guardarDatosEnMongoDB(movies);
             fs.writeFileSync("peliculasOrdenadas" + index + ".json", JSON.stringify(data, null, 2));
 
@@ -39,7 +48,6 @@ apiConnectionController.getJsonFile = async (req, res, next) => {
         }
 
         res.json(allData);
-
     } catch (error) {
         console.error(error);
     }
@@ -52,7 +60,7 @@ const guardarDatosEnMongoDB = async (movies) => {
                 id: movieData.id,
                 titulo: movieData.title,
                 genero: movieData.genre_ids,
-                director: movieData.director,
+                director: movieData.director || null,
                 crew: movieData.crew,
                 popularity: movieData.popularity,
                 vote_count: movieData.vote_count,
@@ -67,4 +75,4 @@ const guardarDatosEnMongoDB = async (movies) => {
     }
 }
 
-module.exports = apiConnectionController;
+module.exports = {apiConnectionController, ids};

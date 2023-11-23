@@ -5,7 +5,7 @@ const movieSchema = new Schema
         id: {type: Number, required: true, unique: true},
         titulo: {type: String},
         genero: [{type: Number, ref:'genre'}],
-        director: {type: Number, ref: 'director'},
+        director: {type: String, ref: 'director'},
         crew: [{type: String}],
         popularity: {type: Number},
         vote_count: {type: Number},
