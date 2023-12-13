@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  .container.mt-5
+    .row.justify-content-center
+      .col-md-6.text-center
+        h1 Bienvenido al Home
+
+        .mt-4
+          a.btn.btn-primary(href='/') Ver Archivo JSON Principal
+
+        .mt-3
+          a.btn.btn-success(href='/genres') Ver Archivo JSON de Géneros
+
+        .mt-3
+          a.btn.btn-info(href='/crew') Ver Archivo JSON de Equipo
+
+  script(src='https://code.jquery.com/jquery-3.6.0.slim.min.js', integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl', crossorigin='anonymous')
+  script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', integrity='sha384-eQFAkPpziOsZ1bWtda4yTvT87swfJSKTCbCShVQF5K6eZeOk/yjxve99fnMxMquR', crossorigin='anonymous')
